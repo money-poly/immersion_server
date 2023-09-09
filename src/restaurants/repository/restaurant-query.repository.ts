@@ -32,13 +32,18 @@ export class CustomRestaurantQueryRepository {
   async getNearByResturants(
     nearbyRestaurantIdxs: number[]
   ): Promise<Restaurant[]> {
-    const nearbyrestaurant = await this.restaurantRepository.find({
-      where: {
-        restaurantIdx: In(nearbyRestaurantIdxs),
-      },
+    const nearbyrestaurants = await this.restaurantRepository.find({
+      relations: ["Images"],
     });
 
-    return nearbyrestaurant;
+    // console.log(nearbyrestaurants);
+    // const nearbyrestaurant = await this.restaurantRepository.find({
+    //   where: {
+    //     restaurantIdx: In(nearbyRestaurantIdxs),
+    //   },
+    // });
+
+    return nearbyrestaurants;
   }
 
   // 식당 및 메뉴 검색

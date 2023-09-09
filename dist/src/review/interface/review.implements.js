@@ -31,10 +31,6 @@ let ReviewtIml = class ReviewtIml {
         return review;
     }
     async createReview(user, createReviewDto) {
-        const post = await this.customReviewQueryRepository.postonefind(createReviewDto.postIdx);
-        if (!post) {
-            throw this.errorResponse.notExistPost(createReviewDto.postIdx);
-        }
         return this.customReviewCommandRepository.createReview(user, createReviewDto);
     }
     async updateReview(reviewIdx, updateReviewDto) {

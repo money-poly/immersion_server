@@ -29,7 +29,6 @@ let CustomReviewCommandRepository = class CustomReviewCommandRepository {
         try {
             const review = queryRunner.manager.getRepository(Review_1.Review).create();
             (review.userIdx = user.userIdx),
-                (review.postIdx = createReviewDto.postIdx),
                 (review.restaurantIdx = createReviewDto.restaurantIdx),
                 (review.content = createReviewDto.content),
                 (review.score = createReviewDto.score);

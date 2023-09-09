@@ -34,12 +34,10 @@ let CustomRestaurantQueryRepository = class CustomRestaurantQueryRepository {
         return user;
     }
     async getNearByResturants(nearbyRestaurantIdxs) {
-        const nearbyrestaurant = await this.restaurantRepository.find({
-            where: {
-                restaurantIdx: (0, typeorm_2.In)(nearbyRestaurantIdxs),
-            },
+        const nearbyrestaurants = await this.restaurantRepository.find({
+            relations: ["Images"],
         });
-        return nearbyrestaurant;
+        return nearbyrestaurants;
     }
     async findMenuByRestaurant(searchWord) {
         const searchResult = await this.restaurantRepository

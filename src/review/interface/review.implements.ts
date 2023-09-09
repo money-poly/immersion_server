@@ -39,14 +39,6 @@ export class ReviewtIml implements ReviewInterface {
     user: UserLoginDto,
     createReviewDto: CreateReviewDto
   ): Promise<any> {
-    const post = await this.customReviewQueryRepository.postonefind(
-      createReviewDto.postIdx
-    );
-
-    if (!post) {
-      throw this.errorResponse.notExistPost(createReviewDto.postIdx);
-    }
-
     return this.customReviewCommandRepository.createReview(
       user,
       createReviewDto
