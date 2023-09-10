@@ -19,7 +19,9 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
-  @IsNotEmpty()
   @IsString()
   fcmToken: string;
+
+  @IsString()
+  refreshToken: string;
 }

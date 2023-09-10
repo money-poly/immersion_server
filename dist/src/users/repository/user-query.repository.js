@@ -33,6 +33,11 @@ let CustomUserQueryRepository = class CustomUserQueryRepository {
         const user = await repository.findOne({ where: { email } });
         return user;
     }
+    async getByRefreshToken(email, queryRunner = undefined) {
+        const repository = queryRunner ? queryRunner.manager.getRepository(User_1.User) : this.userRepository;
+        const user = await repository.findOne({ where: { email } });
+        return user;
+    }
     async findAllFcm() {
         const users = await this.userRepository.find();
         if (users.length === 0) {

@@ -7,6 +7,7 @@ export declare class CustomUserQueryRepository {
     constructor(userRepository: Repository<User>, errorResponse: ErrorResponse);
     getByUserIdx(userIdx: number, queryRunner?: QueryRunner | undefined): Promise<User>;
     getByEmail(email: string, queryRunner?: QueryRunner | undefined): Promise<User>;
+    getByRefreshToken(email: string, queryRunner?: QueryRunner | undefined): Promise<User>;
     findAllFcm(): Promise<{
         fcmTokens: {};
     }>;

@@ -17,7 +17,6 @@ export class CustomUserQueryRepository {
 
   async getByUserIdx(userIdx: number, queryRunner: QueryRunner | undefined = undefined) {
     const repository = queryRunner ? queryRunner.manager.getRepository(User) : this.userRepository;
-
     const user = await repository.findOne({ where: { userIdx } });
     
     return user;
@@ -25,7 +24,13 @@ export class CustomUserQueryRepository {
 
   async getByEmail(email: string, queryRunner: QueryRunner | undefined = undefined) {
     const repository = queryRunner ? queryRunner.manager.getRepository(User) : this.userRepository;
+    const user = await repository.findOne({ where: { email }});
+    
+    return user;
+  }
 
+  async getByRefreshToken(email: string, queryRunner: QueryRunner | undefined = undefined) {
+    const repository = queryRunner ? queryRunner.manager.getRepository(User) : this.userRepository;
     const user = await repository.findOne({ where: { email }});
     
     return user;
@@ -34,7 +39,6 @@ export class CustomUserQueryRepository {
   // 모든 fcmtoken 반환
   async findAllFcm() {
     const users = await this.userRepository.find();
-
     if (users.length === 0) {
       throw this.errorResponse.notExistFCM;
     }

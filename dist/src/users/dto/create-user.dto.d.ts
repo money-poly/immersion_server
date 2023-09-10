@@ -4,4 +4,5 @@ export declare class CreateUserDto {
     phone: string;
     password: string;
     fcmToken: string;
+    refreshToken: string;
 }

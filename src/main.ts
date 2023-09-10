@@ -7,12 +7,9 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 import * as expressBasicAuth from "express-basic-auth";
 import { HttpExceptionFilter } from "./aop/exception/http-exception.filter";
 import * as cookieParser from 'cookie-parser';
-import { CustomLogger } from "resource/logger/custom-logger";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: new CustomLogger()
-  });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());

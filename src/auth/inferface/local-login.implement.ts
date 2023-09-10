@@ -1,12 +1,9 @@
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { CustomUserQueryRepository } from "src/users/repository/user-query.repository";
 import { CustomUserCommandRepository } from "src/users/repository/user-Command.repository";
 import { ErrorResponse } from "src/aop/exception/error-reponse";
-import Redis from "ioredis";
-import { InjectRedis } from "@liaoliaots/nestjs-redis";
-import { CustomLogger } from "resource/logger/custom-logger";
 
 @Injectable()
 export class LocalLoginStrategy {
@@ -14,8 +11,8 @@ export class LocalLoginStrategy {
   private email_: string;
   private password_: string | null;
   private userIdx_: number | null;
-  constructor(
-    @InjectRedis() private readonly client: Redis,
+  private readonly logger = new Logger()
+  constructor( 
     private readonly jwtService: JwtService,
     private readonly customUserCommandRepository: CustomUserCommandRepository,
     private readonly customUserQueryRepository: CustomUserQueryRepository,
@@ -45,7 +42,7 @@ export class LocalLoginStrategy {
     else this.errorResponse.comparePassword(user.password);
   }
 
-  private getAccessToken(payload) {
+  public getAccessToken(payload) {
     return this.jwtService.sign(payload, {
       secret : process.env.JWT_ACCESS_TOKEN_SECRET,
       expiresIn : process.env.JWT_ACCESS_TOKEN_EXPIRED_TIME
@@ -63,22 +60,21 @@ export class LocalLoginStrategy {
 
   private async hashAndStoreRefreshToken(refreshToken) {
     await bcrypt.hash(refreshToken, 10);
-    // user DB에 hash 된 refresh token 저장
-    // userIdx 는 어디서 하지..
     const user = await this.customUserQueryRepository.getByEmail(this.email_);
+    this.logger.log("test");
 
     this.customUserCommandRepository.storeRefreshToken(user, refreshToken);
-    // await this.client.set('cats', JSON.stringify(refreshToken), 'EX', 120);
   }
 
-  public async CheckRT(){
+  public async CheckRT(userIdx, refreshToken){
     // db에 있는 refresh token 비교 후 맞으면 true
+    const user = await this.customUserQueryRepository.getByRefreshToken(refreshToken);
+    const result = user.userIdx == userIdx ? true : false;
+    return result;
   }
 
   public async setAccessTokenExpired(){
-    storeAccessTokenToRedis
+    await this.customUserCommandRepository.storeAccessTokenToRedis
   }
-
-
 }
 

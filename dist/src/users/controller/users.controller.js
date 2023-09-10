@@ -39,6 +39,10 @@ let UsersController = class UsersController {
         return this.authService.login(data);
     }
     getAccessTokenByRefreshToken() {
+        return this.authService.refreshAccessToken();
+    }
+    logout() {
+        return this.authService.logout();
     }
     findAllFCM() {
         return this.usersService.getAllFCM();
@@ -85,6 +89,16 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "getAccessTokenByRefreshToken", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: "로그아웃" }),
+    (0, use_interceptors_decorator_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),
+    (0, exception_filters_decorator_1.UseFilters)(http_exception_filter_1.HttpExceptionFilter),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.Get)("logout"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "logout", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "모든 FCM 토큰 조회" }),
     (0, use_interceptors_decorator_1.UseInterceptors)(success_interceptor_1.SuccessInterceptor),

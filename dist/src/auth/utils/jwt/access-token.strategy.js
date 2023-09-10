@@ -31,7 +31,8 @@ let ATStrategy = class ATStrategy extends (0, passport_1.PassportStrategy)(passp
         const user = await this.customUserQueryRepository.getByUserIdx(userIdx);
         if (!user)
             this.errorResponse.notAuthorizationLogin();
-        return user;
+        if (await checkATExpiredTime())
+            return user;
     }
 };
 ATStrategy = __decorate([

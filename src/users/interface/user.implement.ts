@@ -8,6 +8,7 @@ import { CreateUserDto } from "../dto/create-user.dto";
 import { CustomUserCommandRepository } from "../repository/user-command.repository";
 import { CustomUserQueryRepository } from "../repository/user-query.repository";
 import { ErrorResponse } from "src/aop/exception/error-reponse";
+import { LikePost } from "resource/db/entities/LikePost";
 
 @Injectable()
 export class UserImpl implements UserInterface {
@@ -28,7 +29,7 @@ export class UserImpl implements UserInterface {
     if (!existUser) {
       const newUser = await this.customUserCommandRepository.signUp({
         ...userInfo,
-        password: hashedPassword,
+        password: hashedPassword
       });
       return { userIdx: newUser.userIdx.toString() };
     } else {

@@ -17,8 +17,11 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const User_1 = require("../../../resource/db/entities/User");
+const nestjs_redis_1 = require("@liaoliaots/nestjs-redis");
+const ioredis_1 = require("ioredis");
 let CustomUserCommandRepository = class CustomUserCommandRepository {
-    constructor(userRepository) {
+    constructor(redis, userRepository) {
+        this.redis = redis;
         this.userRepository = userRepository;
     }
     async signUp(userInfo, queryRunner = undefined) {
@@ -39,11 +42,22 @@ let CustomUserCommandRepository = class CustomUserCommandRepository {
         const newUser = await repository.save(userInfo);
         return newUser;
     }
+    async storeAccessTokenToRedis(userInfo, accessToken, queryRunner = undefined) {
+        try {
+            const key = `access_token:${userInfo.userIdx}`;
+            await this.redis.hmset(key, { token: accessToken });
+        }
+        catch (error) {
+            throw new Error(`Failed to store access token in Redis: ${error.message}`);
+        }
+    }
 };
 CustomUserCommandRepository = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(0, (0, nestjs_redis_1.InjectRedis)()),
+    __param(1, (0, typeorm_1.InjectRepository)(User_1.User)),
+    __metadata("design:paramtypes", [ioredis_1.default,
+        typeorm_2.Repository])
 ], CustomUserCommandRepository);
 exports.CustomUserCommandRepository = CustomUserCommandRepository;
 //# sourceMappingURL=user-command.repository.js.map
